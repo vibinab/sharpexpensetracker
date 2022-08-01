@@ -7,6 +7,8 @@ export const Signup = () => {
     const [email, setemail]= useState('');
     const [password,setpassword]=useState('');
     const [confirmpassword,setconifrmpassword]=useState('');
+    const [error, seterror]=useState(null);
+    const [isloading,setisloading]=useState(false)
 
 
     const emailhandler=(event)=> {
@@ -29,8 +31,9 @@ export const Signup = () => {
         console.log(useremail,userpassword,userconfirmpassword)
 
         if(userpassword===userconfirmpassword){
-
-            fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBIgjFkM6qpnh2_mVUR1jWlgfuJfjlCpyc1',{
+  setisloading(true)
+  seterror(null)
+            fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBIgjFkM6qpnh2_mVUR1jWlgfuJfjlCpyc',{
                 method:'POST',
                 body:JSON.stringify({
                   email:useremail,
@@ -41,6 +44,7 @@ export const Signup = () => {
                   'Content-Type':'application/json'
                  }
             }).then(res=>{
+                setisloading(false)
                 if(res.ok){
                     console.log("user registered")
                 }
@@ -50,7 +54,8 @@ export const Signup = () => {
                         if(data && data.error && data.error.message){
                         errormsg=data.error.message
                         }
-                        alert(errormsg)
+                        // alert(errormsg)
+                        seterror(errormsg)
                     })
                 }
             })
@@ -78,7 +83,7 @@ export const Signup = () => {
                     <input type="password" placeholder='Confirm Password' onChange={changepasswordhandler} required></input>
                 </div>
                 <div className='signupdiv'>
-                    <button className='signup'>Signup</button>
+                  {!isloading &&  <button className='signup'>Signup</button>}
                 </div>
                
             </form>
@@ -87,6 +92,12 @@ export const Signup = () => {
         <div className='signupcontent'>
                 <p>Have an account?  <NavLink className='loginlink' to="/login">Login</NavLink> </p>
             </div>
+            {isloading && <p>sending</p>}
+        <div style={{textAlign:"center"}}>
+            {!isloading && error && <p>{error}</p>}
+        </div>
+       
+
     </>
   )
 }
