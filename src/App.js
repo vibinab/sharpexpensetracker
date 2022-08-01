@@ -2,10 +2,11 @@ import logo from './logo.svg';
 import './App.css';
 import { Signup } from './component/Auth/Signup';
 import { Login } from './component/Auth/Login';
-import {Route,Switch} from "react-router-dom";
+import {Redirect, Route,Switch} from "react-router-dom";
 import { Expense } from './component/Expensetracker/Expense';
 import AuthContext from './store/auth-context';
 import { useContext } from 'react';
+import { Profile } from './component/profile/Profile';
 
 function App() {
 
@@ -25,6 +26,16 @@ function App() {
       <Expense />
     </Route>)
     }
+    
+
+    { isloggendin && (<Route path="/profile">
+      <Profile />
+    </Route>)
+    }
+
+    <Route path="*">
+    <Redirect to="/login"></Redirect>
+    </Route>
     
     </Switch>
     
