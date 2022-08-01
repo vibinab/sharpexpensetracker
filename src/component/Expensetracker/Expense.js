@@ -3,7 +3,7 @@ import "./Expense.css";
 import { NavLink } from 'react-router-dom';
 import axios from "axios";
 import AuthContext from '../../store/auth-context';
-
+import { Header } from '../Layout/Header';
 
 
 export const Expense = () => {
@@ -58,7 +58,8 @@ export const Expense = () => {
 
     }
   return (
-    <>
+    <>   
+         <Header />
         <div className='expensehead'>
         <div>
             <p>welcome express tracker</p>
