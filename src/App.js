@@ -7,6 +7,7 @@ import { Expense } from './component/Expensetracker/Expense';
 import AuthContext from './store/auth-context';
 import { useContext } from 'react';
 import { Profile } from './component/profile/Profile';
+import { Forgotpassword } from './component/Auth/Forgotpassword';
 
 function App() {
 
@@ -32,6 +33,10 @@ function App() {
       <Profile />
     </Route>)
     }
+
+    <Route path="/forgotpassword">
+    <Forgotpassword />
+    </Route>
 
     <Route path="*">
     <Redirect to="/login"></Redirect>

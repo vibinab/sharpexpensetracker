@@ -82,7 +82,7 @@ export const Login = () => {
                     {!isloading && <button className='login'>Login</button> }
                 </div>
                 <div style={{textAlign:"center"}}>
-                    <p>forgot password</p>
+                    <p><NavLink to="/forgotpassword">forgot password</NavLink></p>
                 </div>
                 <div>
                     {isloading && <p>sending request</p> }
