@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import "./Profile.css";
 import AuthContext from '../../store/auth-context';
 
@@ -6,10 +6,56 @@ import AuthContext from '../../store/auth-context';
 export const Profile = () => {
     const[profilename, setprofilename]=useState('');
     const[url,seturl]=useState('');
-    const [error, seterror]=useState(null)
 
-    const authctx=useContext(AuthContext)
-    
+    const [getprofilename,setpofilename]=useState('');
+    const [geturl, setgeturl]=useState('');
+    const [error, seterror]=useState(null)  
+     const authctx=useContext(AuthContext)
+
+    useEffect(()=> {
+
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBIgjFkM6qpnh2_mVUR1jWlgfuJfjlCpyc',{
+            method:'POST',
+            body:JSON.stringify({
+                idToken:authctx.token
+            }),
+            headers: {
+                'Content-Type':'application/json'
+               }
+
+        })
+        .then((res)=> {
+
+            if(res.ok){
+                return res.json()
+            }
+
+            else {
+                res.json().then((data)=> {
+                    let err;
+                    if(data && data.error && data.error.message){
+                        err=data.error.message;
+
+                    }
+                    throw new Error(err)
+
+                });
+            }
+
+        }).then((data)=>{
+            console.log(data.users)
+            console.log(data.users[0].photoUrl)
+            console.log(data.users[0].displayName)
+            setpofilename(data.users[0].displayName)
+            setgeturl(data.users[0].photoUrl)
+        })
+        .catch(e=> {
+            console.log(e.message)
+        })
+
+    },[])
+
+  
     const profilenamehandler=(event)=> {
         setprofilename(event.target.value)
     }
@@ -74,11 +120,15 @@ export const Profile = () => {
 
                 <div>
                     <label>full name</label>
-                    <input type="text" onChange={profilenamehandler} required></input>
+                    <input type="text" onChange={profilenamehandler} 
+                    value={getprofilename}
+                    required></input>
                 </div>
                 <div>
                     <label>profile photo url</label>
-                    <input type="text" onChange={profileurlhandler} required></input>
+                    <input type="text" onChange={profileurlhandler} 
+                    value={geturl}
+                    required></input>
                 </div>
                 <p>  <button className='profilebtn'>update</button></p>
                  {
