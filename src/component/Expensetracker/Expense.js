@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import axios from "axios";
 import AuthContext from '../../store/auth-context';
 import { Header } from '../Layout/Header';
+import { Expensetracker } from './Expensetracker';
 
 
 export const Expense = () => {
@@ -77,6 +78,10 @@ export const Expense = () => {
                 <button type="submit">verify</button>
                 </form>
             </div>
+        </div>
+
+        <div>
+        <Expensetracker />
         </div>
     </>
   )
