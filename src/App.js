@@ -8,6 +8,7 @@ import AuthContext from './store/auth-context';
 import { useContext } from 'react';
 import { Profile } from './component/profile/Profile';
 import { Forgotpassword } from './component/Auth/Forgotpassword';
+import { Update } from './component/Expensetracker/Update';
 
 function App() {
 
@@ -37,6 +38,10 @@ function App() {
     <Route path="/forgotpassword">
     <Forgotpassword />
     </Route>
+
+     <Route path="/update/:spendid/:routeid/:desc/:category">
+      <Update/>
+     </Route>
 
     <Route path="*">
     <Redirect to="/login"></Redirect>

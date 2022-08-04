@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./Expensetracker.css"
 import { Expensetrackeritem } from './Expensetrackeritem'
 import axios from "axios"
+import { useHistory } from 'react-router-dom'
 
 export const Expensetracker = () => {
 
@@ -14,8 +15,9 @@ export const Expensetracker = () => {
 
     const[ category,setcategory]=useState('');
 
-    const [error, seterror]=useState(null);
+    const history=useHistory()
 
+    
     const spendhandler=(event)=> {
         setpend(event.target.value)
     }
@@ -37,7 +39,7 @@ export const Expensetracker = () => {
         console.log(expensedata)
         // setdata( current=>[...current,expensedata])
         // console.log(data)
-        axios.post('https://expensetracker-ed764-default-rtdb.firebaseio.com/e.json', {
+        axios.post('https://expensetracker-ed764-default-rtdb.firebaseio.com/track.json', {
             body:expensedata,
           
         }).then((res)=>{
@@ -52,19 +54,25 @@ export const Expensetracker = () => {
             console.log(err)
         })
 
+        
+
         setpend(" ")
         setdesc(" ")
         setcategory(" ")
     }
 
     useEffect(()=> {
-        axios.get('https://expensetracker-ed764-default-rtdb.firebaseio.com/e.json')
+        axios.get('https://expensetracker-ed764-default-rtdb.firebaseio.com/track.json')
         .then((res)=>{
             console.log("get",res.data)
            let loaddata=[]
+           let newdata={}
             for (const key in res.data){
+                console.log("key",key)
                 console.log("Data",res.data[key].body)
+                res.data[key].body.key=key
                  loaddata.push(res.data[key].body)
+                 
             }
             console.log("show data",loaddata)
            setdataapi(loaddata)
@@ -87,7 +95,26 @@ export const Expensetracker = () => {
         })
 
     },[])
+   
+    const deletebuttonhandler=(id)=> {
+        console.log(id)
+         axios.delete(`https://expensetracker-ed764-default-rtdb.firebaseio.com/track/${id}.json`)
+         .then((res)=> {
+            console.log(res)
+         })
+         .catch((err)=> {
+            console.log(err)
+         })
+    }
 
+    const editbuttonhandler=(key,spend,desc,category)=> {
+          console.log(key)
+          console.log(spend)
+          console.log(desc)
+          console.log(category)
+          history.replace('/update/'+spend+"/"+key+"/"+desc+"/"+category)
+
+    }
 
   return (
     <>
@@ -95,11 +122,15 @@ export const Expensetracker = () => {
             <form onSubmit={expensehandler}>
                 <div>
                     <label>spend</label>
-                    <input type="number" onChange={spendhandler}></input>
+                    <input type="number" onChange={spendhandler}
+                    
+                    ></input>
                 </div>
                 <div>
                     <label>desc</label>
-                    <input type="text" onChange={deschandler}></input>
+                    <input type="text" onChange={deschandler}
+                   
+                    ></input>
                 </div>
                 <div>
                 <label>category</label>
@@ -137,9 +168,12 @@ export const Expensetracker = () => {
         dataapi.map((d)=> {
             return (
                 <Expensetrackeritem 
+                    keyss={d.key}
                     spend={d.spend}
                     desc={d.desc} 
                     category={d.category}
+                    ondelete={deletebuttonhandler}
+                    onedit={editbuttonhandler}
                 />
             )
         })
